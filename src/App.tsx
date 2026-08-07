@@ -3,13 +3,16 @@ import { WalletProvider } from './context/WalletContext';
 import { VaultProvider, useVault } from './context/VaultContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { Architecture } from './components/Architecture';
 import { Features } from './components/Features';
 import { HowItWorks } from './components/HowItWorks';
+import { OwnershipBox } from './components/OwnershipBox';
 import { Dashboard } from './components/Dashboard';
 import { DocsView } from './components/DocsView';
 import { Footer } from './components/Footer';
 import { CreateEntryModal } from './components/CreateEntryModal';
 import { ConnectModal } from './components/ConnectModal';
+import { LiquidBackground } from './components/LiquidBackground';
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<'home' | 'dashboard' | 'docs'>('home');
@@ -29,7 +32,10 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] text-[#D1D0D0] flex flex-col font-sans selection:bg-[#988686]/30 selection:text-white">
+    <div className="min-h-screen bg-[#000000] text-[#D1D0D0] flex flex-col font-sans selection:bg-[#988686]/30 selection:text-white relative overflow-x-hidden">
+      {/* Liquid Metal Ambient Motion Background */}
+      <LiquidBackground />
+
       {/* Navigation */}
       <Navbar
         currentView={currentView}
@@ -46,8 +52,10 @@ function AppContent() {
               openCreateModal={handleOpenCreateModal}
               onExploreDocs={() => setCurrentView('docs')}
             />
+            <Architecture />
             <Features onSelectFeature={handleLaunchDashboard} />
             <HowItWorks />
+            <OwnershipBox />
           </>
         )}
 
@@ -83,3 +91,4 @@ export default function App() {
     </WalletProvider>
   );
 }
+

@@ -2,7 +2,7 @@ import React from 'react';
 import { Logo } from './Logo';
 import { useWallet } from '../context/WalletContext';
 import { useVault } from '../context/VaultContext';
-import { Plus, Wallet, Lock, ShieldCheck, FileText, ChevronRight, Menu, X, BookOpen, Layers } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   currentView: 'home' | 'dashboard' | 'docs';
@@ -10,8 +10,8 @@ interface NavbarProps {
   openCreateModal: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, openCreateModal }) => {
-  const { connected, shortAddress, setOpenConnectModal, walletName } = useWallet();
+export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) => {
+  const { connected, shortAddress, setOpenConnectModal } = useWallet();
   const { setActiveTab } = useVault();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -24,53 +24,38 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, ope
   };
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-black/90 backdrop-blur-xl border-b border-[#5C4E4E]/40 transition-all">
+    <nav className="sticky top-0 z-40 w-full bg-[#000000]/95 backdrop-blur-md border-b border-[#282020] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Logo */}
         <button 
           onClick={() => handleNavClick('home')}
-          className="focus:outline-none flex items-center gap-2 group text-left"
+          className="focus:outline-none text-left flex items-center"
         >
           <Logo size={36} showText={true} />
         </button>
 
-        {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-1 sm:gap-2 px-3 py-1.5 rounded-full bg-[#121010] border border-[#5C4E4E]/50">
+        {/* Center Links (VAULT, PROOFS, NOTES, PROTOCOL) */}
+        <div className="hidden md:flex items-center gap-8">
           <button
             onClick={() => handleNavClick('dashboard', 'vault')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all flex items-center gap-2 ${
-              currentView === 'dashboard'
-                ? 'bg-[#5C4E4E] text-white border border-[#988686]'
-                : 'text-[#D1D0D0] hover:text-white hover:bg-[#5C4E4E]/30'
-            }`}
+            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
           >
-            <Lock className="w-3.5 h-3.5 text-[#988686]" />
-            <span>Vault</span>
+            VAULT
           </button>
 
           <button
             onClick={() => handleNavClick('dashboard', 'proofs')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all flex items-center gap-2 ${
-              currentView === 'dashboard'
-                ? 'bg-[#5C4E4E] text-white border border-[#988686]'
-                : 'text-[#D1D0D0] hover:text-white hover:bg-[#5C4E4E]/30'
-            }`}
+            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#988686]" />
-            <span>Proofs</span>
+            PROOFS
           </button>
 
           <button
             onClick={() => handleNavClick('dashboard', 'notes')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all flex items-center gap-2 ${
-              currentView === 'dashboard'
-                ? 'bg-[#5C4E4E] text-white border border-[#988686]'
-                : 'text-[#D1D0D0] hover:text-white hover:bg-[#5C4E4E]/30'
-            }`}
+            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
           >
-            <FileText className="w-3.5 h-3.5 text-[#988686]" />
-            <span>Notes</span>
+            NOTES
           </button>
 
           <button
@@ -81,61 +66,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, ope
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }, 100);
             }}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider text-[#D1D0D0] hover:text-white hover:bg-[#5C4E4E]/30 transition-all"
+            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
           >
-            <span>How it Works</span>
-          </button>
-
-          <button
-            onClick={() => handleNavClick('docs')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all flex items-center gap-1.5 ${
-              currentView === 'docs'
-                ? 'bg-[#5C4E4E] text-white border border-[#988686]'
-                : 'text-[#D1D0D0] hover:text-white hover:bg-[#5C4E4E]/30'
-            }`}
-          >
-            <BookOpen className="w-3.5 h-3.5 text-[#988686]" />
-            <span>Docs</span>
+            PROTOCOL
           </button>
         </div>
 
-        {/* Action Buttons: Create Entry + Wallet Connect */}
-        <div className="hidden md:flex items-center gap-3">
-          {/* Create Entry Trigger */}
-          <button
-            onClick={openCreateModal}
-            className="px-4 py-2 rounded-xl gothic-btn text-xs font-bold tracking-wider uppercase flex items-center gap-2 shadow-lg shadow-[#988686]/10"
-          >
-            <Plus className="w-4 h-4 text-[#988686]" />
-            <span>Create Entry</span>
-          </button>
-
-          {/* Wallet Connect Pill */}
+        {/* Right Button (CONNECT WALLET - Light Cream / Grey Pill) */}
+        <div className="hidden md:flex items-center">
           <button
             onClick={() => setOpenConnectModal(true)}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-medium flex items-center gap-2 transition-all border ${
-              connected
-                ? 'bg-[#181414] border-[#988686] text-white hover:bg-[#251f1f]'
-                : 'gothic-btn-outline'
-            }`}
+            className="px-5 py-2.5 rounded-none bg-[#E0DCD6] hover:bg-[#FFFFFF] text-[#0A0808] font-mono text-xs font-semibold uppercase tracking-[0.15em] transition-all shadow-md"
           >
-            <Wallet className={`w-4 h-4 ${connected ? 'text-[#988686]' : 'text-[#D1D0D0]'}`} />
-            <span>{connected ? shortAddress : 'Connect Wallet'}</span>
-            {connected && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
+            {connected ? shortAddress : 'CONNECT WALLET'}
           </button>
         </div>
 
         {/* Mobile menu toggle */}
-        <div className="md:hidden flex items-center gap-2">
-          <button
-            onClick={openCreateModal}
-            className="p-2 rounded-lg bg-[#5C4E4E] text-white border border-[#988686]"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
+        <div className="md:hidden flex items-center gap-3">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg text-[#D1D0D0] hover:text-white hover:bg-[#5C4E4E]/40"
+            className="p-2 text-[#D1D0D0] hover:text-white"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -144,34 +95,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, ope
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0c0b0b] border-b border-[#5C4E4E] px-4 pt-3 pb-6 space-y-3 animate-fadeIn">
+        <div className="md:hidden bg-[#0c0a0a] border-b border-[#3a2e2e] px-4 pt-4 pb-6 space-y-4">
           <button
             onClick={() => handleNavClick('dashboard', 'vault')}
-            className="w-full text-left py-2.5 px-3 rounded-lg text-sm text-[#D1D0D0] hover:bg-[#5C4E4E]/30 flex items-center gap-3"
+            className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
           >
-            <Lock className="w-4 h-4 text-[#988686]" />
-            <span>Time-Locked Vault</span>
+            VAULT
           </button>
           <button
             onClick={() => handleNavClick('dashboard', 'proofs')}
-            className="w-full text-left py-2.5 px-3 rounded-lg text-sm text-[#D1D0D0] hover:bg-[#5C4E4E]/30 flex items-center gap-3"
+            className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
           >
-            <ShieldCheck className="w-4 h-4 text-[#988686]" />
-            <span>Proof of Creation</span>
+            PROOFS
           </button>
           <button
             onClick={() => handleNavClick('dashboard', 'notes')}
-            className="w-full text-left py-2.5 px-3 rounded-lg text-sm text-[#D1D0D0] hover:bg-[#5C4E4E]/30 flex items-center gap-3"
+            className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
           >
-            <FileText className="w-4 h-4 text-[#988686]" />
-            <span>Anonymous Notes</span>
+            NOTES
           </button>
           <button
             onClick={() => handleNavClick('docs')}
-            className="w-full text-left py-2.5 px-3 rounded-lg text-sm text-[#D1D0D0] hover:bg-[#5C4E4E]/30 flex items-center gap-3"
+            className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
           >
-            <BookOpen className="w-4 h-4 text-[#988686]" />
-            <span>Documentation</span>
+            DOCUMENTATION
           </button>
           <div className="pt-2">
             <button
@@ -179,10 +126,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, ope
                 setMobileMenuOpen(false);
                 setOpenConnectModal(true);
               }}
-              className="w-full py-3 rounded-xl gothic-btn text-xs font-bold uppercase font-mono flex items-center justify-center gap-2"
+              className="w-full py-3 bg-[#E0DCD6] text-[#0A0808] font-mono text-xs font-semibold uppercase tracking-[0.15em]"
             >
-              <Wallet className="w-4 h-4 text-[#988686]" />
-              <span>{connected ? shortAddress : 'Connect Aptos Wallet'}</span>
+              {connected ? shortAddress : 'CONNECT WALLET'}
             </button>
           </div>
         </div>
@@ -190,3 +136,4 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView, ope
     </nav>
   );
 };
+
