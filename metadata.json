@@ -1,0 +1,6 @@
+{
+  "name": "Mercury",
+  "description": "Wallet-signed vault app built on Shelby Protocol on Aptos blockchain",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

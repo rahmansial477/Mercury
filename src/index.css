@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-black: #000000;
+    --color-grey-light: #D1D0D0;
+    --color-mauve: #988686;
+    --color-brown-dark: #5C4E4E;
+  }
+
+  body {
+    background-color: #000000;
+    color: #D1D0D0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom Gothic Glows & Animations */
+@keyframes ambient-glow {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.1) translate(10px, -15px);
+  }
+}
+
+.animate-ambient {
+  animation: ambient-glow 12s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #5C4E4E;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #988686;
+}
+
+/* Gothic Noir Glass & Cards */
+.gothic-card {
+  background-color: rgba(18, 16, 16, 0.85);
+  border: 1px solid rgba(92, 78, 78, 0.4);
+  backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gothic-card:hover {
+  border-color: rgba(152, 134, 134, 0.6);
+  box-shadow: 0 0 25px -5px rgba(152, 134, 134, 0.15);
+}
+
+.gothic-card-active {
+  background-color: rgba(26, 23, 23, 0.95);
+  border-color: #988686;
+  box-shadow: 0 0 30px -5px rgba(152, 134, 134, 0.25);
+}
+
+.gothic-btn {
+  background-color: #5C4E4E;
+  color: #FFFFFF;
+  border: 1px solid #988686;
+  transition: all 0.2s ease;
+}
+
+.gothic-btn:hover {
+  background-color: #988686;
+  color: #000000;
+  box-shadow: 0 0 20px rgba(152, 134, 134, 0.4);
+}
+
+.gothic-btn-outline {
+  background: transparent;
+  color: #D1D0D0;
+  border: 1px solid #5C4E4E;
+  transition: all 0.2s ease;
+}
+
+.gothic-btn-outline:hover {
+  border-color: #988686;
+  color: #FFFFFF;
+  background-color: rgba(92, 78, 78, 0.25);
+}
