@@ -6,7 +6,7 @@ export const OwnershipBox: React.FC = () => {
     <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10 bg-[#000000]">
       
       {/* Outer Border Box: Built on Absolute Ownership */}
-      <div className="border border-[#2e2626] bg-[#000000] p-8 sm:p-12 md:p-16">
+      <div className="border border-[#5C4E4E] bg-[#0A0808] p-8 sm:p-12 md:p-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           
           {/* Left Column Text */}
@@ -15,7 +15,7 @@ export const OwnershipBox: React.FC = () => {
               Built on Absolute Ownership.
             </h2>
 
-            <div className="space-y-4 text-xs sm:text-sm text-[#A09892] font-light leading-relaxed">
+            <div className="space-y-4 text-sm sm:text-base text-[#D1D0D0] font-normal leading-relaxed">
               <p>
                 Mercury fundamentally shifts control from platforms back to individuals. Every piece of data is wallet-signed, ensuring immutability and providing fake-proof timestamps.
               </p>
@@ -26,16 +26,17 @@ export const OwnershipBox: React.FC = () => {
           </div>
 
           {/* Right Column Key Container */}
-          <div className="w-full h-full min-h-[220px] sm:min-h-[260px] border border-[#2e2626] bg-[#050404] flex items-center justify-center p-8">
-            <Key className="w-10 h-10 sm:w-12 sm:h-12 text-[#5c4e4e] stroke-[1.25]" />
+          <div className="w-full h-full min-h-[220px] sm:min-h-[260px] border border-[#5C4E4E] bg-[#120F10] flex items-center justify-center p-8">
+            <Key className="w-12 h-12 sm:w-14 sm:h-14 text-[#988686] stroke-[1.5]" />
           </div>
 
         </div>
       </div>
 
       {/* Disclaimer Banner Box */}
-      <div className="border border-[#2e2626] bg-[#050404] p-5 text-center">
-        <p className="font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-[#8E8681] leading-relaxed">
+      <div className="border border-[#988686]/70 bg-[#1F1819] p-6 text-center shadow-xl">
+        <p className="font-mono text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-[#D1D0D0] leading-relaxed">
+          <span className="text-[#988686] font-bold mr-2">NOTICE ::</span>
           MERCURY IS AN INDEPENDENT, UNOFFICIAL APPLICATION BUILT ON SHELBY'S TESTNET. IT IS NOT DEVELOPED, OPERATED, OR ENDORSED BY THE SHELBY TEAM.
         </p>
       </div>

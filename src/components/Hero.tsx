@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { useWallet } from '../context/WalletContext';
+import { Logo } from './Logo';
 import { Lock, ShieldCheck, FileText, ExternalLink, Key, Database, Sparkles } from 'lucide-react';
 
 interface HeroProps {
@@ -17,18 +18,29 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchDashboard }) => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
         
         {/* Left Column: Headlines & Action */}
-        <div className="lg:col-span-7 space-y-10">
+        <div className="lg:col-span-7 space-y-8">
           
+          {/* Hero Brand Badge with Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex items-center"
+          >
+            <Logo size={34} showText={true} />
+          </motion.div>
+
           {/* Main Headline: Lock it. Prove it. Speak on it. */}
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="font-cinzel text-5xl sm:text-7xl lg:text-8xl font-normal tracking-tight text-white leading-[1.05]"
           >
             Lock it{' '}
-            <span className="italic font-serif text-[#A08E8E]">Prove it</span>{' '}
+            <span className="italic font-serif text-[#C4B2B2]">Prove it</span>{' '}
             Speak on it
           </motion.h1>
 

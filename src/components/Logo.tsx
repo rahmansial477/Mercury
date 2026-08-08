@@ -10,16 +10,14 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({ 
   className = '', 
-  size = 36, 
+  size = 32, 
   showText = true,
-  badgeBg = false
 }) => {
   return (
-    <div className={`inline-flex items-center gap-3.5 select-none ${className}`}>
-      <div className="relative flex items-center justify-center shrink-0 group">
-        {badgeBg && (
-          <div className="absolute -inset-1.5 rounded-2xl bg-[#524546]/30 blur-sm group-hover:bg-[#68585a]/50 transition-all duration-300" />
-        )}
+    <div className={`inline-flex items-center gap-3 select-none group cursor-pointer ${className}`}>
+      {/* Contained Box / Frame around Logo Icon */}
+      <div className="relative p-1.5 sm:p-2 rounded-xl bg-[#1D1718] border border-[#988686]/80 shadow-[0_2px_12px_rgba(0,0,0,0.7)] flex items-center justify-center shrink-0 group-hover:border-[#D1D0D0] group-hover:bg-[#2A2122] transition-all">
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#D1D0D0]/20 via-[#988686]/25 to-transparent pointer-events-none" />
         
         <svg
           width={size}
@@ -114,7 +112,6 @@ export const Logo: React.FC<LogoProps> = ({
             />
 
             {/* 6. Central Mercury Liquid Teardrop / Droplet */}
-            {/* Teardrop socket shadow outline */}
             <path
               d="M 50 42 C 40 50 36 60 40 70 C 44 78 54 78 58 70 C 62 60 58 50 50 42 Z"
               fill="#181213"
@@ -137,7 +134,7 @@ export const Logo: React.FC<LogoProps> = ({
       </div>
 
       {showText && (
-        <span className="font-cinzel text-xl sm:text-2xl font-normal tracking-[0.2em] text-[#E5E3DF] group-hover:text-white transition-colors">
+        <span className="font-cinzel text-xl sm:text-2xl font-bold tracking-[0.2em] text-[#D1D0D0] bg-gradient-to-r from-white via-[#D1D0D0] to-[#988686] bg-clip-text text-transparent group-hover:from-white group-hover:to-[#D1D0D0] transition-colors drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
           MERCURY
         </span>
       )}

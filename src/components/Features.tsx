@@ -32,7 +32,7 @@ export const Features: React.FC<FeaturesProps> = ({ onSelectFeature }) => {
               Vault
             </h3>
 
-            <p className="text-xs sm:text-sm text-[#A09892] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#D1D0D0] font-normal leading-relaxed">
               A highly secure, decentralized repository for your most sensitive assets. Files are encrypted and stored across a distributed network, rendering them immune to tampering or centralized censorship. Access is exclusively gated by your cryptographic keys.
             </p>
           </div>
@@ -57,7 +57,7 @@ export const Features: React.FC<FeaturesProps> = ({ onSelectFeature }) => {
               Proofs
             </h3>
 
-            <p className="text-xs sm:text-sm text-[#A09892] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#D1D0D0] font-normal leading-relaxed">
               Generate unassailable cryptographic evidence of existence and ownership. By anchoring metadata to the blockchain, you create a permanent timestamp that protects intellectual property and establishes an irrefutable chain of custody. Defend your work with mathematical certainty.
             </p>
           </div>
@@ -82,7 +82,7 @@ export const Features: React.FC<FeaturesProps> = ({ onSelectFeature }) => {
               Notes
             </h3>
 
-            <p className="text-xs sm:text-sm text-[#A09892] font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#D1D0D0] font-normal leading-relaxed">
               Publish verifiable statements, directives, or commentary linked directly to your digital identity. Notes are signed and immutable, ensuring your signal cuts through the noise. Communicate with absolute authority and permanent attribution.
             </p>
           </div>

@@ -39,28 +39,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
         <div className="hidden md:flex items-center gap-8">
           <button
             onClick={() => handleNavClick('home')}
-            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
+            className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white transition-colors"
           >
             HOME
           </button>
 
           <button
             onClick={() => handleNavClick('dashboard', 'vault')}
-            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
+            className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white transition-colors"
           >
             VAULT
           </button>
 
           <button
             onClick={() => handleNavClick('dashboard', 'proofs')}
-            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
+            className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white transition-colors"
           >
             PROOFS
           </button>
 
           <button
             onClick={() => handleNavClick('dashboard', 'notes')}
-            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
+            className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white transition-colors"
           >
             NOTES
           </button>
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }, 100);
             }}
-            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
+            className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white transition-colors"
           >
             PROTOCOL
           </button>
