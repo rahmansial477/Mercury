@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
               <Logo size={34} showText={true} />
             </div>
             <p className="font-cinzel italic text-base text-[#988686] tracking-wide font-light">
-              "Lock it. Prove it. Speak on it."
+              "Lock it Prove it Speak on it"
             </p>
             <p className="text-xs text-[#8E8681] max-w-sm font-light leading-relaxed">
               Decentralized cryptographic vault, verifiable proofs, and wallet-signed anonymous broadcasts on Shelby.

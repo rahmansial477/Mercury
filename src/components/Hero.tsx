@@ -10,7 +10,7 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onLaunchDashboard }) => {
-  const { connected, shortAddress, setOpenConnectModal } = useWallet();
+  const { connected, address, shortAddress, setOpenConnectModal } = useWallet();
 
   return (
     <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-[#282020] bg-[#000000]">
@@ -27,9 +27,9 @@ export const Hero: React.FC<HeroProps> = ({ onLaunchDashboard }) => {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-cinzel text-5xl sm:text-7xl lg:text-8xl font-normal tracking-tight text-white leading-[1.05]"
           >
-            Lock it.{' '}
-            <span className="italic font-serif text-[#A08E8E]">Prove it.</span>{' '}
-            Speak on it.
+            Lock it{' '}
+            <span className="italic font-serif text-[#A08E8E]">Prove it</span>{' '}
+            Speak on it
           </motion.h1>
 
           {/* Vertical Accent Line + 3 Core Sentences */}
