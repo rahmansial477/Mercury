@@ -77,6 +77,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           >
             PROTOCOL
           </button>
+
+          <button
+            onClick={() => handleNavClick('docs')}
+            className="text-xs font-mono font-bold uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white transition-colors"
+          >
+            DOCUMENTATION
+          </button>
         </div>
 
         {/* Right Button (CONNECT WALLET - Light Cream / Grey Pill) */}
@@ -126,6 +133,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
             className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
           >
             NOTES
+          </button>
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              if (currentView !== 'home') setCurrentView('home');
+              setTimeout(() => {
+                const el = document.getElementById('how-it-works');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+            className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
+          >
+            PROTOCOL
           </button>
           <button
             onClick={() => handleNavClick('docs')}
