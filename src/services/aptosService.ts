@@ -73,10 +73,14 @@ export function getCountdown(targetTimestamp: number) {
  * Create 0x1::aptos_account::transfer transaction payload (0 APT to self as proof trigger)
  */
 export function buildProofTransferPayload(senderAddress: string) {
+  const targetAddress = senderAddress || '0x1';
   return {
-    type: 'entry_function_payload',
     function: '0x1::aptos_account::transfer',
+    functionArguments: [targetAddress, 0],
+    typeArguments: [],
+    // Backwards/Alternative keys for all wallet adapter standards
+    arguments: [targetAddress, 0],
     type_arguments: [],
-    arguments: [senderAddress, '0'], // 0 octas (0 APT) to self
+    type: 'entry_function_payload',
   };
 }
