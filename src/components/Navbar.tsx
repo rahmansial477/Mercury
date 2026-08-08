@@ -35,8 +35,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
           <Logo size={36} showText={true} />
         </button>
 
-        {/* Center Links (VAULT, PROOFS, NOTES, PROTOCOL) */}
+        {/* Center Links (HOME, VAULT, PROOFS, NOTES, PROTOCOL) */}
         <div className="hidden md:flex items-center gap-8">
+          <button
+            onClick={() => handleNavClick('home')}
+            className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
+          >
+            HOME
+          </button>
+
           <button
             onClick={() => handleNavClick('dashboard', 'vault')}
             className="text-xs font-mono font-medium uppercase tracking-[0.2em] text-[#B0AAA4] hover:text-white transition-colors"
@@ -96,6 +103,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, setCurrentView }) =
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#0c0a0a] border-b border-[#3a2e2e] px-4 pt-4 pb-6 space-y-4">
+          <button
+            onClick={() => handleNavClick('home')}
+            className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"
+          >
+            HOME
+          </button>
           <button
             onClick={() => handleNavClick('dashboard', 'vault')}
             className="block w-full text-left py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#D1D0D0] hover:text-white"

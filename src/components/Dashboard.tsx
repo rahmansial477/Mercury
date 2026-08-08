@@ -52,22 +52,33 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
 
   const categories = ['All', 'Financial', 'Engineering', 'Credentials', 'Infrastructure', 'Philosophy'];
 
+  // Strictly filter entries belonging to the currently connected wallet address
+  const userVaultItems = vaultItems.filter(item => 
+    address && item.ownerAddress?.toLowerCase() === address.toLowerCase()
+  );
+  const userProofItems = proofItems.filter(item => 
+    address && item.ownerAddress?.toLowerCase() === address.toLowerCase()
+  );
+  const userNotes = anonymousNotes.filter(item => 
+    address && item.ownerAddress?.toLowerCase() === address.toLowerCase()
+  );
+
   // Filter items based on active tab, search, and category
-  const filteredVault = vaultItems.filter(item => {
+  const filteredVault = userVaultItems.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase()) || 
                           item.category.toLowerCase().includes(search.toLowerCase());
     const matchesCat = selectedCategory === 'All' || item.category === selectedCategory;
     return matchesSearch && matchesCat;
   });
 
-  const filteredProofs = proofItems.filter(item => {
+  const filteredProofs = userProofItems.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase()) || 
                           item.payloadHash.toLowerCase().includes(search.toLowerCase());
     const matchesCat = selectedCategory === 'All' || item.tags.includes(selectedCategory);
     return matchesSearch && matchesCat;
   });
 
-  const filteredNotes = anonymousNotes.filter(item => {
+  const filteredNotes = userNotes.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase()) || 
                           item.content.toLowerCase().includes(search.toLowerCase());
     const matchesCat = selectedCategory === 'All' || item.category === selectedCategory;
@@ -109,7 +120,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
         </div>
       )}
 
-      {/* Tabs Navigation Bar (Image 3 layout) */}
+      {/* Tabs Navigation Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         
         {/* Main 3 Tabs */}
@@ -123,7 +134,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
             }`}
           >
             <Lock className="w-4 h-4 text-[#988686]" />
-            <span>Vault ({vaultItems.length})</span>
+            <span>Vault ({userVaultItems.length})</span>
           </button>
 
           <button
@@ -135,7 +146,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
             }`}
           >
             <ShieldCheck className="w-4 h-4 text-[#988686]" />
-            <span>Proofs ({proofItems.length})</span>
+            <span>Proofs ({userProofItems.length})</span>
           </button>
 
           <button
@@ -147,7 +158,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
             }`}
           >
             <FileText className="w-4 h-4 text-[#988686]" />
-            <span>Notes ({anonymousNotes.length})</span>
+            <span>Notes ({userNotes.length})</span>
           </button>
         </div>
 
@@ -187,9 +198,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
         ))}
       </div>
 
-      {/* TAB 1: VAULT ITEMS (TIME LOCK) */}
-      {activeTab === 'vault' && (
-        <div className="space-y-6">
+      {/* Wallet Gating for Vault, Proofs, and Notes */}
+      {!connected ? (
+        <div className="p-12 sm:p-20 rounded-2xl bg-[#050404] border border-[#2e2626] text-center space-y-6 my-8 max-w-2xl mx-auto shadow-2xl">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#120f10] border border-[#5C4E4E]/60 flex items-center justify-center text-[#988686]">
+            <Lock className="w-8 h-8 stroke-[1.5]" />
+          </div>
+          <div className="space-y-3">
+            <h3 className="font-cinzel text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              Connect your wallet to view this
+            </h3>
+            <p className="text-xs sm:text-sm text-[#A09892] max-w-md mx-auto leading-relaxed">
+              Access to the {activeTab === 'vault' ? 'Encrypted Vault' : activeTab === 'proofs' ? 'Creation Proofs' : 'Verified Notes'} requires authenticating your digital identity on Shelby Protocol.
+            </p>
+          </div>
+          <button
+            onClick={() => setOpenConnectModal(true)}
+            className="px-8 py-3.5 bg-[#B3A9A3] hover:bg-[#FFFFFF] text-[#0A0808] font-mono text-xs font-semibold uppercase tracking-[0.18em] transition-all shadow-xl rounded-none"
+          >
+            CONNECT WALLET
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* TAB 1: VAULT ITEMS (TIME LOCK) */}
+          {activeTab === 'vault' && (
+            <div className="space-y-6">
           {filteredVault.length === 0 ? (
             /* Empty State */
             <div className="p-16 rounded-2xl gothic-card border border-[#5C4E4E]/50 text-center space-y-4">
@@ -514,6 +548,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
             </div>
           )}
         </div>
+      )}
+        </>
       )}
 
     </div>

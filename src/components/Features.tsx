@@ -15,8 +15,11 @@ export const Features: React.FC<FeaturesProps> = ({ onSelectFeature }) => {
         
         {/* Card 1: Vault */}
         <motion.div
-          whileHover={{ y: -4 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          whileHover={{ y: -6 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           onClick={() => onSelectFeature('vault')}
           className="bg-[#050404] p-8 sm:p-10 rounded-none cursor-pointer flex flex-col justify-between border border-[#2e2626] mercury-hover-card group"
         >
@@ -37,8 +40,11 @@ export const Features: React.FC<FeaturesProps> = ({ onSelectFeature }) => {
 
         {/* Card 2: Proofs */}
         <motion.div
-          whileHover={{ y: -4 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          whileHover={{ y: -6 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           onClick={() => onSelectFeature('proofs')}
           className="bg-[#050404] p-8 sm:p-10 rounded-none cursor-pointer flex flex-col justify-between border border-[#2e2626] mercury-hover-card group"
         >
@@ -59,8 +65,11 @@ export const Features: React.FC<FeaturesProps> = ({ onSelectFeature }) => {
 
         {/* Card 3: Notes */}
         <motion.div
-          whileHover={{ y: -4 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          whileHover={{ y: -6 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           onClick={() => onSelectFeature('notes')}
           className="bg-[#050404] p-8 sm:p-10 rounded-none cursor-pointer flex flex-col justify-between border border-[#2e2626] mercury-hover-card group"
         >

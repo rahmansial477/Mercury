@@ -143,6 +143,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({ isOpen, onCl
           txHash,
           shelbyBlobId: shelbyCommit.shelbyBlobId,
           category,
+          ownerAddress: address!,
         });
         setActiveTab('notes');
       }

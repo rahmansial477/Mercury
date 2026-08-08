@@ -45,6 +45,7 @@ export interface AnonymousNote {
   verified: boolean;
   likes: number;
   category: string;
+  ownerAddress: string;
 }
 
 export interface WalletState {
