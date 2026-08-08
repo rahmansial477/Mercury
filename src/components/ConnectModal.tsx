@@ -1,6 +1,6 @@
 import React from 'react';
 import { useWallet } from '../context/WalletContext';
-import { X, ShieldCheck, Cpu, Wallet, ExternalLink, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, ShieldCheck, Wallet, ExternalLink, CheckCircle2 } from 'lucide-react';
 
 export const ConnectModal: React.FC = () => {
   const {
@@ -52,11 +52,6 @@ export const ConnectModal: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-sm font-semibold text-white">{walletName || 'Connected Wallet'}</span>
-                  {isSimulatedWallet && (
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-[#988686]/20 text-[#988686] border border-[#988686]/30">
-                      Demo Mode
-                    </span>
-                  )}
                 </div>
                 <p className="font-mono text-xs text-[#D1D0D0] mt-1">{shortAddress}</p>
               </div>
@@ -93,7 +88,7 @@ export const ConnectModal: React.FC = () => {
             {/* Petra Wallet Option */}
             <button
               onClick={() => connectWallet('petra_extension')}
-              className="w-full p-4 rounded-xl bg-[#141212] hover:bg-[#1f1b1b] border border-[#5C4E4E]/60 hover:border-[#988686] flex items-center justify-between group transition-all"
+              className="w-full p-4 rounded-xl bg-[#141212] hover:bg-[#1f1b1b] border border-[#5C4E4E]/60 hover:border-[#988686] flex items-center justify-between group transition-all cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#988686] to-[#5C4E4E] flex items-center justify-center font-bold text-white text-xs shadow-md">
@@ -108,30 +103,6 @@ export const ConnectModal: React.FC = () => {
               </div>
               <span className="text-xs px-2.5 py-1 rounded-md bg-[#5C4E4E]/40 text-[#D1D0D0] group-hover:bg-[#988686] group-hover:text-black font-mono transition-colors">
                 Connect
-              </span>
-            </button>
-
-            {/* Instant Demo Wallet Option */}
-            <button
-              onClick={() => connectWallet('demo')}
-              className="w-full p-4 rounded-xl bg-[#181414] hover:bg-[#241e1e] border border-[#988686]/60 hover:border-[#988686] flex items-center justify-between group transition-all relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#988686] text-black font-mono text-[9px] uppercase font-bold tracking-wider rounded-bl-lg">
-                Instant Testnet
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#5C4E4E] flex items-center justify-center text-[#D1D0D0]">
-                  <Cpu className="w-5 h-5" />
-                </div>
-                <div className="text-left">
-                  <div className="text-sm font-semibold text-white group-hover:text-[#988686] transition-colors flex items-center gap-1.5">
-                    Demo Aptos Wallet
-                  </div>
-                  <div className="text-[11px] text-[#988686] font-mono">No Extension Required • Direct Preview</div>
-                </div>
-              </div>
-              <span className="text-xs px-2.5 py-1 rounded-md gothic-btn text-white font-mono">
-                Launch
               </span>
             </button>
 

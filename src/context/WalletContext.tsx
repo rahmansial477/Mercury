@@ -28,52 +28,27 @@ const wallets = [new PetraWallet()];
 export const WalletProviderInner: React.FC<{ children: ReactNode }> = ({ children }) => {
   const aptosWallet = useAptosWallet();
   const [openConnectModal, setOpenConnectModal] = useState(false);
-  const [simulatedAddress, setSimulatedAddress] = useState<string | null>(null);
-  const [simulatedConnected, setSimulatedConnected] = useState(false);
   const [balance, setBalance] = useState(14.82);
 
-  // Check stored simulated wallet on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('mercury_simulated_wallet');
-    if (saved) {
-      setSimulatedAddress(saved);
-      setSimulatedConnected(true);
-    }
-  }, []);
-
-  const connected = aptosWallet.connected || simulatedConnected;
+  const connected = aptosWallet.connected;
   const address = aptosWallet.account?.address
     ? String(aptosWallet.account.address)
-    : simulatedAddress;
+    : null;
   
-  const walletName = aptosWallet.wallet?.name || (simulatedConnected ? 'Petra (Demo Mode)' : null);
-  const isSimulatedWallet = !aptosWallet.connected && simulatedConnected;
+  const walletName = aptosWallet.wallet?.name || null;
+  const isSimulatedWallet = false;
 
-  const connectWallet = async (requestedName?: string) => {
+  const connectWallet = async () => {
     try {
-      if (requestedName === 'petra_extension' && aptosWallet.wallets?.some(w => w.name === 'Petra')) {
-        await aptosWallet.connect('Petra' as any);
-        setSimulatedConnected(false);
+      const petra = aptosWallet.wallets?.find(w => w.name.toLowerCase().includes('petra')) || aptosWallet.wallets?.[0];
+      if (petra) {
+        await aptosWallet.connect(petra.name as any);
       } else {
-        // Connect or generate Demo Aptos Testnet Wallet
-        let simAddr = localStorage.getItem('mercury_simulated_wallet');
-        if (!simAddr) {
-          const bytes = new Uint8Array(32);
-          crypto.getRandomValues(bytes);
-          simAddr = '0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
-          localStorage.setItem('mercury_simulated_wallet', simAddr);
-        }
-        setSimulatedAddress(simAddr);
-        setSimulatedConnected(true);
+        window.open('https://petra.app/', '_blank');
       }
       setOpenConnectModal(false);
     } catch (err) {
       console.error('Wallet connection error:', err);
-      // Fallback to simulated demo wallet if extension fails or is absent
-      let simAddr = '0xa8f249c1b3e77810a9f145c2298e1a89c91b823e1109a908f7710c011f01d4a8';
-      setSimulatedAddress(simAddr);
-      setSimulatedConnected(true);
-      setOpenConnectModal(false);
     }
   };
 
@@ -81,8 +56,6 @@ export const WalletProviderInner: React.FC<{ children: ReactNode }> = ({ childre
     if (aptosWallet.connected) {
       await aptosWallet.disconnect();
     }
-    setSimulatedConnected(false);
-    localStorage.removeItem('mercury_simulated_wallet');
   };
 
   const signTransactionAndSubmit = async (payload: any): Promise<string> => {
