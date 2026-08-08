@@ -99,11 +99,11 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({ isOpen, onCl
       });
 
       // Step 3: Aptos Ledger Settlement Transaction
-      setSubmitStep('3/3 Signing Transaction & Aptos Ledger Settlement...');
+      setSubmitStep('3/3 Waiting for Petra Approval & On-Chain Confirmation...');
       const transferPayload = buildProofTransferPayload(address!);
       const txHash = await signTransactionAndSubmit(transferPayload);
 
-      // Save Entry to Vault Context
+      // Save Entry to Vault Context ONLY after txHash is confirmed on-chain
       if (selectedType === 'timelock') {
         const encryptedContent = await encryptPayload(rawPayload, unlockTime);
         await addVaultItem({
@@ -135,6 +135,7 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({ isOpen, onCl
         });
         setActiveTab('proofs');
       } else if (selectedType === 'note') {
+        setSubmitStep('3/3 Requesting Petra Message Signature...');
         const sigResult = await signMessagePayload(rawPayload);
         await addAnonymousNote({
           title,
@@ -153,7 +154,9 @@ export const CreateEntryModal: React.FC<CreateEntryModalProps> = ({ isOpen, onCl
 
     } catch (err: any) {
       console.error('Commit error:', err);
-      setErrorMessage(err.message || 'An error occurred while signing transaction.');
+      const rawMsg = err?.message || 'Transaction was cancelled — nothing was saved.';
+      const isCancelled = rawMsg.toLowerCase().includes('cancel') || rawMsg.toLowerCase().includes('reject') || rawMsg.toLowerCase().includes('denied');
+      setErrorMessage(isCancelled ? 'Transaction was cancelled — nothing was saved.' : rawMsg);
       setIsSubmitting(false);
     }
   };

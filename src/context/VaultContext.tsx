@@ -13,6 +13,8 @@ interface VaultContextType {
   unlockVaultItem: (itemId: string) => Promise<{ success: boolean; content?: string; error?: string }>;
   likeNote: (noteId: string) => void;
   deleteVaultItem: (itemId: string) => void;
+  deleteProofItem: (proofId: string) => void;
+  deleteAnonymousNote: (noteId: string) => void;
   activeTab: 'vault' | 'proofs' | 'notes';
   setActiveTab: (tab: 'vault' | 'proofs' | 'notes') => void;
   searchQuery: string;
@@ -152,6 +154,14 @@ export const VaultProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setVaultItems(prev => prev.filter(v => v.id !== itemId));
   };
 
+  const deleteProofItem = (proofId: string) => {
+    setProofItems(prev => prev.filter(p => p.id !== proofId));
+  };
+
+  const deleteAnonymousNote = (noteId: string) => {
+    setAnonymousNotes(prev => prev.filter(n => n.id !== noteId));
+  };
+
   const likeNote = (noteId: string) => {
     setAnonymousNotes(prev =>
       prev.map(n => (n.id === noteId ? { ...n, likes: n.likes + 1 } : n))
@@ -169,6 +179,8 @@ export const VaultProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         addAnonymousNote,
         unlockVaultItem,
         deleteVaultItem,
+        deleteProofItem,
+        deleteAnonymousNote,
         likeNote,
         activeTab,
         setActiveTab,

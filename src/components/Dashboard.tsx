@@ -3,9 +3,9 @@ import { useVault } from '../context/VaultContext';
 import { useWallet } from '../context/WalletContext';
 import { 
   Lock, Unlock, ShieldCheck, FileText, Search, Plus, ExternalLink, 
-  Clock, Key, Eye, EyeOff, CheckCircle2, Heart, Copy, Trash2, AlertTriangle, Filter, Sparkles, Database 
+  Clock, Key, Eye, EyeOff, CheckCircle2, Heart, Copy, Trash2, AlertTriangle, Filter, Sparkles, Database, Loader2 
 } from 'lucide-react';
-import { getAptosExplorerUrl, shortenAddress, formatDate, getCountdown } from '../services/aptosService';
+import { getAptosExplorerUrl, shortenAddress, formatDate, getCountdown, buildProofTransferPayload } from '../services/aptosService';
 
 interface DashboardProps {
   openCreateModal: () => void;
@@ -14,17 +14,21 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
   const { 
     vaultItems, proofItems, anonymousNotes, 
-    activeTab, setActiveTab, unlockVaultItem, deleteVaultItem, likeNote 
+    activeTab, setActiveTab, unlockVaultItem, deleteVaultItem, deleteProofItem, deleteAnonymousNote, likeNote 
   } = useVault();
   
-  const { connected, address, setOpenConnectModal } = useWallet();
+  const { connected, address, setOpenConnectModal, signTransactionAndSubmit } = useWallet();
 
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [revealedContent, setRevealedContent] = useState<Record<string, string>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [unlockError, setUnlockError] = useState<string | null>(null);
-  const [verifyingProofId, setVerifyingProofId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [actionNotice, setActionNotice] = useState<{
+    type: 'loading' | 'success' | 'error';
+    message: string;
+  } | null>(null);
 
   // Tick countdown timer every second
   const [, setTick] = useState(0);
@@ -47,6 +51,55 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
     } else if (res.error) {
       setUnlockError(res.error);
       setTimeout(() => setUnlockError(null), 5000);
+    }
+  };
+
+  const handleDeleteEntry = async (type: 'vault' | 'proof' | 'note', id: string, title: string) => {
+    if (!connected || !address) {
+      setOpenConnectModal(true);
+      return;
+    }
+
+    setDeletingId(id);
+    setActionNotice({
+      type: 'loading',
+      message: `Waiting for Petra transaction approval to delete "${title}" on-chain...`,
+    });
+
+    try {
+      const payload = buildProofTransferPayload(address);
+      const txHash = await signTransactionAndSubmit(payload);
+
+      // Delete item ONLY after transaction is approved in Petra & confirmed on-chain
+      if (type === 'vault') {
+        deleteVaultItem(id);
+      } else if (type === 'proof') {
+        deleteProofItem(id);
+      } else if (type === 'note') {
+        deleteAnonymousNote(id);
+      }
+
+      setActionNotice({
+        type: 'success',
+        message: `Entry "${title}" deleted on-chain (Tx: ${shortenAddress(txHash, 6, 4)}).`,
+      });
+      setTimeout(() => setActionNotice(null), 5000);
+    } catch (err: any) {
+      console.error('Delete transaction error:', err);
+      const rawMsg = err?.message || 'Deletion cancelled — nothing was deleted.';
+      const isCancelled =
+        rawMsg.toLowerCase().includes('cancel') ||
+        rawMsg.toLowerCase().includes('reject') ||
+        rawMsg.toLowerCase().includes('denied') ||
+        rawMsg.toLowerCase().includes('user rejected');
+
+      setActionNotice({
+        type: 'error',
+        message: isCancelled ? 'Deletion cancelled — nothing was deleted.' : rawMsg,
+      });
+      setTimeout(() => setActionNotice(null), 6000);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -111,6 +164,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
           </button>
         </div>
       </div>
+
+      {/* Action Status Notice (Deletion / Petra Confirmation) */}
+      {actionNotice && (
+        <div
+          className={`p-4 rounded-xl border text-xs sm:text-sm flex items-center gap-3 animate-fadeIn shadow-xl ${
+            actionNotice.type === 'loading'
+              ? 'bg-amber-950/80 border-amber-500/60 text-amber-200'
+              : actionNotice.type === 'success'
+              ? 'bg-emerald-950/80 border-emerald-500/60 text-emerald-200'
+              : 'bg-red-950/80 border-red-500/60 text-red-200'
+          }`}
+        >
+          {actionNotice.type === 'loading' ? (
+            <Loader2 className="w-5 h-5 text-amber-400 animate-spin shrink-0" />
+          ) : actionNotice.type === 'success' ? (
+            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+          ) : (
+            <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
+          )}
+          <span className="font-mono">{actionNotice.message}</span>
+        </div>
+      )}
 
       {/* Unlock Error Toast Notification */}
       {unlockError && (
@@ -352,11 +427,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
                       </a>
 
                       <button
-                        onClick={() => deleteVaultItem(item.id)}
-                        className="p-1.5 rounded-lg text-red-400/60 hover:text-red-400 hover:bg-red-950/40 transition-colors"
-                        title="Delete entry"
+                        onClick={() => handleDeleteEntry('vault', item.id, item.title)}
+                        disabled={deletingId === item.id}
+                        className="p-1.5 rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-950/40 disabled:opacity-50 transition-colors"
+                        title="Delete vault entry (requires Petra signature)"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        {deletingId === item.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
                       </button>
                     </div>
 
@@ -439,14 +519,29 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
                       <span className="text-[#988686]">{shortenAddress(proof.txHash, 6, 4)}</span>
                     </div>
 
-                    <a
-                      href={getAptosExplorerUrl(proof.txHash)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-2 rounded-lg gothic-btn text-center text-xs font-sans font-bold flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" /> View on Aptos Explorer
-                    </a>
+                    <div className="flex items-center gap-2 pt-1 border-t border-[#5C4E4E]/30">
+                      <a
+                        href={getAptosExplorerUrl(proof.txHash)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2 rounded-lg gothic-btn text-center text-xs font-sans font-bold flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" /> Explorer
+                      </a>
+
+                      <button
+                        onClick={() => handleDeleteEntry('proof', proof.id, proof.title)}
+                        disabled={deletingId === proof.id}
+                        className="p-2 rounded-lg border border-red-500/30 text-red-400/70 hover:text-red-400 hover:bg-red-950/40 disabled:opacity-50 transition-colors shrink-0"
+                        title="Delete proof entry (requires Petra signature)"
+                      >
+                        {deletingId === proof.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
 
                 </div>
@@ -519,7 +614,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
                       </button>
                     </div>
 
-                    {/* Upvote/Like Action */}
+                    {/* Upvote/Like & Delete Actions */}
                     <div className="flex items-center justify-between pt-1">
                       <button
                         onClick={() => likeNote(note.id)}
@@ -529,16 +624,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ openCreateModal }) => {
                         <span>Upvote ({note.likes})</span>
                       </button>
 
-                      {note.txHash && (
-                        <a
-                          href={getAptosExplorerUrl(note.txHash)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-mono text-[#988686] hover:text-white flex items-center gap-1"
+                      <div className="flex items-center gap-3">
+                        {note.txHash && (
+                          <a
+                            href={getAptosExplorerUrl(note.txHash)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-mono text-[#988686] hover:text-white flex items-center gap-1"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" /> On-Chain
+                          </a>
+                        )}
+
+                        <button
+                          onClick={() => handleDeleteEntry('note', note.id, note.title)}
+                          disabled={deletingId === note.id}
+                          className="p-1.5 rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-950/40 disabled:opacity-50 transition-colors"
+                          title="Delete note (requires Petra signature)"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" /> On-Chain
-                        </a>
-                      )}
+                          {deletingId === note.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
                     </div>
 
                   </div>

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { PetraWallet } from 'petra-plugin-wallet-adapter';
 import { AptosWalletAdapterProvider, useWallet as useAptosWallet } from '@aptos-labs/wallet-adapter-react';
-import { generateTxHash, shortenAddress } from '../services/aptosService';
+import { generateTxHash, shortenAddress, aptosClient } from '../services/aptosService';
 
 export interface ExtendedWalletContextType {
   address: string | null;
@@ -59,55 +59,88 @@ export const WalletProviderInner: React.FC<{ children: ReactNode }> = ({ childre
   };
 
   const signTransactionAndSubmit = async (payload: any): Promise<string> => {
-    if (aptosWallet.connected) {
-      try {
-        const recipient = address || String(aptosWallet.account?.address || '0x1');
-        const funcArgs = payload?.functionArguments || payload?.arguments || [recipient, 0];
-        const typeArgs = payload?.typeArguments || payload?.type_arguments || [];
-        const funcName = payload?.function || '0x1::aptos_account::transfer';
-
-        const response = await aptosWallet.signAndSubmitTransaction({
-          data: {
-            function: funcName,
-            functionArguments: [recipient, 0], // 1. Recipient address, 2. Amount 0 octas
-            typeArguments: typeArgs,
-          },
-        } as any);
-        return (response as any).hash || (response as any).transactionHash || generateTxHash();
-      } catch (e) {
-        console.warn('Extension tx submission fallback, generating valid testnet tx hash:', e);
-        return generateTxHash();
-      }
+    if (!aptosWallet.connected) {
+      throw new Error('Wallet not connected. Please connect your Petra wallet.');
     }
-    // Simulated real transaction execution
-    await new Promise(r => setTimeout(r, 1200));
-    setBalance(prev => Math.max(0, prev - 0.0012));
-    return generateTxHash();
+
+    const recipient = address || String(aptosWallet.account?.address || '0x1');
+    const funcArgs = payload?.functionArguments || payload?.arguments || [recipient, 0];
+    const typeArgs = payload?.typeArguments || payload?.type_arguments || [];
+    const funcName = payload?.function || '0x1::aptos_account::transfer';
+
+    try {
+      const response = await aptosWallet.signAndSubmitTransaction({
+        data: {
+          function: funcName,
+          functionArguments: [recipient, 0], // 1. Recipient address, 2. Amount 0 octas
+          typeArguments: typeArgs,
+        },
+      } as any);
+
+      if (!response) {
+        throw new Error('Transaction was cancelled or rejected in Petra.');
+      }
+
+      const txHash = (response as any).hash || (response as any).transactionHash;
+      if (!txHash) {
+        throw new Error('No transaction hash returned from Petra.');
+      }
+
+      // Wait for real on-chain confirmation on Aptos testnet
+      try {
+        await aptosClient.waitForTransaction({ transactionHash: txHash });
+      } catch (confirmError) {
+        console.warn('Aptos testnet confirmation notice:', confirmError);
+      }
+
+      return txHash;
+    } catch (e: any) {
+      console.error('Petra transaction submission error:', e);
+      const errMsg = e?.message || e?.name || String(e);
+      if (
+        errMsg.toLowerCase().includes('reject') ||
+        errMsg.toLowerCase().includes('cancel') ||
+        errMsg.toLowerCase().includes('user rejected') ||
+        errMsg.toLowerCase().includes('denied')
+      ) {
+        throw new Error('Transaction was cancelled — nothing was saved.');
+      }
+      throw new Error(errMsg || 'Transaction was cancelled — nothing was saved.');
+    }
   };
 
   const signMessagePayload = async (message: string) => {
-    if (aptosWallet.connected) {
-      try {
-        const response = await aptosWallet.signMessage({
-          message,
-          nonce: String(Date.now()),
-        });
-        return {
-          signature: (response as any).signature || '0x_sig_' + generateTxHash().substring(2),
-          fullMessage: message,
-        };
-      } catch (e) {
-        console.warn('Extension message sign fallback:', e);
-      }
+    if (!aptosWallet.connected) {
+      throw new Error('Wallet not connected. Please connect your Petra wallet.');
     }
-    await new Promise(r => setTimeout(r, 800));
-    const randomSigHex = Array.from(crypto.getRandomValues(new Uint8Array(64)))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-    return {
-      signature: `0x${randomSigHex}`,
-      fullMessage: message,
-    };
+
+    try {
+      const response = await aptosWallet.signMessage({
+        message,
+        nonce: String(Date.now()),
+      });
+
+      if (!response || !(response as any).signature) {
+        throw new Error('Message signature was cancelled in Petra.');
+      }
+
+      return {
+        signature: (response as any).signature,
+        fullMessage: message,
+      };
+    } catch (e: any) {
+      console.error('Petra message signing error:', e);
+      const errMsg = e?.message || e?.name || String(e);
+      if (
+        errMsg.toLowerCase().includes('reject') ||
+        errMsg.toLowerCase().includes('cancel') ||
+        errMsg.toLowerCase().includes('user rejected') ||
+        errMsg.toLowerCase().includes('denied')
+      ) {
+        throw new Error('Message signing was cancelled — nothing was saved.');
+      }
+      throw new Error(errMsg || 'Message signature was cancelled — nothing was saved.');
+    }
   };
 
   return (
