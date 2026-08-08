@@ -86,12 +86,10 @@ export const WalletProviderInner: React.FC<{ children: ReactNode }> = ({ childre
         throw new Error('No transaction hash returned from Petra.');
       }
 
-      // Wait for real on-chain confirmation on Aptos testnet
-      try {
-        await aptosClient.waitForTransaction({ transactionHash: txHash });
-      } catch (confirmError) {
-        console.warn('Aptos testnet confirmation notice:', confirmError);
-      }
+      // Non-blocking background verification check on Aptos node
+      aptosClient.waitForTransaction({ transactionHash: txHash }).catch((err) => {
+        console.warn('Aptos node background confirmation notice:', err);
+      });
 
       return txHash;
     } catch (e: any) {
@@ -169,7 +167,13 @@ export const WalletProviderInner: React.FC<{ children: ReactNode }> = ({ childre
 
 export const WalletProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <AptosWalletAdapterProvider plugins={wallets} autoConnect={false}>
+    <AptosWalletAdapterProvider 
+      plugins={wallets} 
+      autoConnect={false}
+      onError={(error) => {
+        console.warn('Aptos Wallet Adapter notice:', error);
+      }}
+    >
       <WalletProviderInner>{children}</WalletProviderInner>
     </AptosWalletAdapterProvider>
   );
