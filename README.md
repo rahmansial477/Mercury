@@ -32,7 +32,7 @@ Users can post a short note that is signed by their wallet but displayed without
 3. Approve the resulting transaction request in your wallet
 4. Once the transaction is confirmed on-chain, the item appears in your dashboard, tied to your wallet and its real transaction hash
 
-If a transaction is cancelled or rejected in the wallet, no data is saved. Nothing in Mercury is written or displayed until it has been genuinely confirmed on-chain. The same rule applies to deleting an entry — deletion requires a new wallet-signed transaction and will not occur if that transaction is cancelled.
+If a transaction is cancelled or rejected in the wallet, no data is saved. Nothing in Mercury is written or displayed until it has been genuinely confirmed on-chain. The same rule applies to deleting an entry  deletion requires a new wallet-signed transaction and will not occur if that transaction is cancelled.
 
 ## Data and Privacy
 
