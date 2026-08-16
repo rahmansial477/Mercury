@@ -1,6 +1,6 @@
 # Mercury
 
-Wallet-signed on-chain vaults, cryptographic proofs, and verified anonymous notes  built on Shelbynet.
+Wallet-signed on-chain vaults, cryptographic proofs, and verified anonymous notes  built on Shelbynet
 
 Live app: https://mercury-net.vercel.app/
 Repository: https://github.com/rahmansial477/Mercury
@@ -15,7 +15,7 @@ The application was built to explore what genuinely useful, non-financial applic
 
 ### Vault — Time-Locked Storage
 
-Users can lock a file or message and set a future unlock date. Once locked, the content cannot be accessed by anyone — including the wallet that created it  until the specified date has passed. This is enforced through real date-comparison logic rather than a cosmetic label, and every lock action requires a wallet-signed transaction to create it. Use cases include future-dated personal notes, timed reveals, and content that needs to remain provably untouched until a set point in time
+Users can lock a file or message and set a future unlock date. Once locked, the content cannot be accessed by anyone — including the wallet that created it  until the specified date has passed. This is enforced through real date-comparison logic rather than a cosmetic label, and every lock action requires a wallet-signed transaction to create it. Use cases include future-dated personal notes timed reveals, and content that needs to remain provably untouched until a set point in time
 
 ### Proofs — On-Chain Proof of Creation
 
