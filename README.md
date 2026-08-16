@@ -1,13 +1,13 @@
 # Mercury
 
-Wallet-signed on-chain vaults, cryptographic proofs, and verified anonymous notes — built on Shelbynet.
+Wallet-signed on-chain vaults, cryptographic proofs, and verified anonymous notes  built on Shelbynet.
 
 Live app: https://mercury-net.vercel.app/
 Repository: https://github.com/rahmansial477/Mercury
 
 ## Overview
 
-Mercury is a Web3 application that combines three distinct on-chain utilities into a single wallet-connected experience. Instead of relying on a centralized server or database, every action inside Mercury is tied to a real wallet signature and a real, verifiable transaction. There is no login system, no account creation, and no central authority controlling access to your data — your wallet is your identity, and your data belongs only to you.
+Mercury is a Web3 application that combines three distinct on-chain utilities into a single wallet-connected experience. Instead of relying on a centralized server or database, every action inside Mercury is tied to a real wallet signature and a real, verifiable transaction. There is no login system, no account creation, and no central authority controlling access to your data  your wallet is your identity, and your data belongs only to you.
 
 The application was built to explore what genuinely useful, non-financial applications of wallet-based ownership and on-chain verification can look like, using Shelby's decentralized storage layer on Shelbynet.
 
@@ -15,7 +15,7 @@ The application was built to explore what genuinely useful, non-financial applic
 
 ### Vault — Time-Locked Storage
 
-Users can lock a file or message and set a future unlock date. Once locked, the content cannot be accessed by anyone — including the wallet that created it — until the specified date has passed. This is enforced through real date-comparison logic rather than a cosmetic label, and every lock action requires a wallet-signed transaction to create it. Use cases include future-dated personal notes, timed reveals, and content that needs to remain provably untouched until a set point in time.
+Users can lock a file or message and set a future unlock date. Once locked, the content cannot be accessed by anyone — including the wallet that created it  until the specified date has passed. This is enforced through real date-comparison logic rather than a cosmetic label, and every lock action requires a wallet-signed transaction to create it. Use cases include future-dated personal notes, timed reveals, and content that needs to remain provably untouched until a set point in time
 
 ### Proofs — On-Chain Proof of Creation
 
